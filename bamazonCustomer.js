@@ -38,10 +38,6 @@ var connection = mysql.createConnection({
 
 
   function displayItems() {
-    if( cart.length > 0) {
-      console.log("---------------------------------- Your Cart ---------------------------------------------- \n")
-      console.table(cart)
-    }
  
     console.log("\n----------------------------------- Products for Sale ------------------------------------- \n")
     connection.query("SELECT * FROM products ORDER BY Product_Name", function(err, res) {
@@ -92,13 +88,17 @@ var connection = mysql.createConnection({
   }  
 
 function exitApp ( ) {
-    console.log("Thanks for shopping at Bamazon")
+    console.log("\n Thanks for shopping at Bamazon \n")
     connection.end()
 }
 
 function checkout (cart) {
 
-console.log("Cart being processed \n")
+if (cart.length === 0) {
+  console.log("\n Your cart is empty! \n")
+  mainMenu ()
+} else {
+console.log("\n Cart being processed \n")
 
 itemTotal=0
 for (i =0; i < cart.length; i++) {
@@ -113,7 +113,7 @@ console.log("\n Cart total is " + itemTotal + "\n")
 
 cart.length =0;
 mainMenu()
-
+}
 }
 
 function getProdInfo(item) {
@@ -163,29 +163,11 @@ function updateProdInfo (itemID, newQuantity, newSales) {
       );
 }
 
-/*function promptCheckout () {
 
-  inquirer.prompt([{
-    type: "confirm",
-    message: "Ready to checkout?",
-    name: "checkout",
-    default:"false"
-}
-]) .then(function(answer) {
-if(answer.checkout) {
-checkout(cart)
-} else {
-displayItems()
-}
-
-
-})
-
-}*/
 
 function addToCart(cart,res, answer) {
   cart.push({Product_ID: res[0].Product_ID, Product_Name: res[0].Product_Name, Price: res[0].Price, Quantity: answer.quantity, Total: answer.quantity * res[0].Price})
-                
+  console.log("\n Item added to cart! \n")              
                   mainMenu()
 
 
@@ -202,7 +184,7 @@ result = cart.find(inCart)
 
 if (result === undefined) {
   cart.push({Product_ID: res[0].Product_ID, Product_Name: res[0].Product_Name, Price: res[0].Price, Quantity: answer.quantity, Total: answer.quantity * res[0].Price})
-
+  console.log("\n Item added to cart! \n")     
   mainMenu()
 } else {
 
@@ -227,7 +209,7 @@ if(matchanswer.cartmatch) {
    cart[cartItemToUpdate].Quantity = answer.quantity
    cart[cartItemToUpdate].Total = answer.quantity *  cart[cartItemToUpdate].Price
 
-  
+   console.log("\n Cart item updated! \n")     
 
    mainMenu()
 
@@ -249,17 +231,13 @@ mainMenu()
 function mainMenu() {
 
   console.log("------------------------------------Welcome to Bamazon!! --------------------------------- \n")
-  if (cart.length > 0) {
-    console.log("Your shopping cart")
-    console.table(cart)
-  }
 
   inquirer
     .prompt({
       name: "queryType",
       type: "list",
       message: "Welcome to Bamazon! What would you like to do today? ",
-      choices: ["View Products for Sale", "View Cart", "Checkout", "Exit"]
+      choices: ["View Products for Sale", "View or Update Cart", "Checkout", "Exit"]
     })
     .then(function(answer) {
 
@@ -286,8 +264,9 @@ function mainMenu() {
 function viewCart() {
 
   if(cart.length === 0) {
-    console.log("There is nothing in your cart \n")
+    console.log("\n There is nothing in your cart \n")
   } else {
+  console.log("\n ------------------------- Your Cart --------------------------------------- \n")
   console.table(cart)
   }
 
@@ -323,6 +302,36 @@ function viewCart() {
 function updateShoppingCart () {
   console.table(cart)
 
+
+  inquirer
+    .prompt([{
+        type: "input",
+        message: "Enter the Product ID of the item you wish to update in your cart",
+        name: "productid"
+      },
+    {
+      type: "input",
+        message: "Wht is the new item quantity?",
+        name: "quantity"
+
+    }]).then(function(updateanswer) {
+
+        function findItem(element) {
+          return parseInt(element.Product_ID) === parseInt(updateanswer.productid)
+        }
+      
+       
+         cartItemToAdjust = cart.findIndex(findItem)
+
+         cart[cartItemToAdjust].Quantity=updateanswer.quantity
+         cart[cartItemToAdjust].Total = updateanswer.quantity *  cart[cartItemToAdjust].Price
+
+
+         console.log("\n Cart Item Update! \n")
+        viewCart()
+      
+})
+
   
   
 
@@ -331,5 +340,26 @@ function updateShoppingCart () {
 
 function deleteFromCart () {
   console.table(cart)
+
+  inquirer
+    .prompt([{
+        type: "input",
+        message: "Enter the Product ID of the item you wish to delete from your cart",
+        name: "productid"
+      }]).then(function(deleteanswer) {
+
+        function findItem(element) {
+          return parseInt(element.Product_ID) === parseInt(deleteanswer.productid)
+        }
+      
+       
+         cartItemToDelete = cart.findIndex(findItem)
+
+         cart.splice(cartItemToDelete, 1)
+
+         console.log("\n Item deleted from cart! \n")
+        viewCart()
+      
+})
 
 }
