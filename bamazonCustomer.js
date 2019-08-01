@@ -5,16 +5,13 @@ var clear = require("clear")
 
 var cTable = require("console.table")
 
+var chalk =require("chalk")
+
 var cart =[]
-
-
 
 var itemTotal =0;
 
-
 var newQuantity=0;
-
-
 
 var connection = mysql.createConnection({
     host: "localhost",
@@ -39,7 +36,7 @@ var connection = mysql.createConnection({
 
   function displayItems() {
  
-    console.log("\n----------------------------------- Products for Sale ------------------------------------- \n")
+    console.log(chalk.inverse.green("\n----------------------------------- Products for Sale ------------------------------------- \n"))
     connection.query("SELECT * FROM products ORDER BY Product_Name", function(err, res) {
       if (err) throw err;
 
@@ -69,7 +66,7 @@ var connection = mysql.createConnection({
 
             if((res[0].Stock_Quantity - answer.quantity) <0) {
 
-              console.log("Insufficent quantity availble to fulfill your oder")
+              console.log(chalk.red.inverse("Insufficent quantity availble to fulfill your oder"))
 
               mainMenu() 
             } else if (cart.length > 0) {
@@ -88,17 +85,17 @@ var connection = mysql.createConnection({
   }  
 
 function exitApp ( ) {
-    console.log("\n Thanks for shopping at Bamazon \n")
+    console.log(chalk.bold.blue("\n Thanks for shopping at Bamazon \n"))
     connection.end()
 }
 
 function checkout (cart) {
 
 if (cart.length === 0) {
-  console.log("\n Your cart is empty! \n")
+  console.log(chalk.inverse.red("\n Your cart is empty! \n"))
   mainMenu ()
 } else {
-console.log("\n Cart being processed \n")
+console.log(chalk.bold.blue("\n Cart being processed \n"))
 
 itemTotal=0
 for (i =0; i < cart.length; i++) {
@@ -109,7 +106,7 @@ for (i =0; i < cart.length; i++) {
     
 }
 console.table(cart)
-console.log("\n Cart total is " + itemTotal + "\n")
+console.log(chalk.inverse.black("\n Cart total is $" + itemTotal + "\n"))
 
 cart.length =0;
 mainMenu()
@@ -167,7 +164,7 @@ function updateProdInfo (itemID, newQuantity, newSales) {
 
 function addToCart(cart,res, answer) {
   cart.push({Product_ID: res[0].Product_ID, Product_Name: res[0].Product_Name, Price: res[0].Price, Quantity: answer.quantity, Total: answer.quantity * res[0].Price})
-  console.log("\n Item added to cart! \n")              
+  console.log(chalk.blue.inverse("\n Item added to cart! \n"))              
                   mainMenu()
 
 
@@ -184,7 +181,7 @@ result = cart.find(inCart)
 
 if (result === undefined) {
   cart.push({Product_ID: res[0].Product_ID, Product_Name: res[0].Product_Name, Price: res[0].Price, Quantity: answer.quantity, Total: answer.quantity * res[0].Price})
-  console.log("\n Item added to cart! \n")     
+  console.log(chalk.inverse.blue("\n Item added to cart! \n"))     
   mainMenu()
 } else {
 
@@ -209,7 +206,7 @@ if(matchanswer.cartmatch) {
    cart[cartItemToUpdate].Quantity = answer.quantity
    cart[cartItemToUpdate].Total = answer.quantity *  cart[cartItemToUpdate].Price
 
-   console.log("\n Cart item updated! \n")     
+   console.log(chalk.inverse.blue("\n Cart item updated! \n"))    
 
    mainMenu()
 
@@ -230,7 +227,7 @@ mainMenu()
 
 function mainMenu() {
 
-  console.log("------------------------------------Welcome to Bamazon!! --------------------------------- \n")
+  console.log(chalk.inverse.blue("------------------------------------Welcome to Bamazon!! --------------------------------- \n"))
 
   inquirer
     .prompt({
@@ -264,9 +261,9 @@ function mainMenu() {
 function viewCart() {
 
   if(cart.length === 0) {
-    console.log("\n There is nothing in your cart \n")
+    console.log(chalk.red.inverse("\n There is nothing in your cart \n"))
   } else {
-  console.log("\n ------------------------- Your Cart --------------------------------------- \n")
+  console.log(chalk.bold.blue("\n ------------------------------ Your Cart ------------------------------------------- \n"))
   console.table(cart)
   }
 
@@ -327,7 +324,7 @@ function updateShoppingCart () {
          cart[cartItemToAdjust].Total = updateanswer.quantity *  cart[cartItemToAdjust].Price
 
 
-         console.log("\n Cart Item Update! \n")
+         console.log(chalk.inverse.blue("\n Cart Item Update! \n"))
         viewCart()
       
 })
@@ -357,7 +354,7 @@ function deleteFromCart () {
 
          cart.splice(cartItemToDelete, 1)
 
-         console.log("\n Item deleted from cart! \n")
+         console.log(chalk.inverse.blue("\n Item deleted from cart! \n"))
         viewCart()
       
 })

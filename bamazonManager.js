@@ -1,7 +1,7 @@
 var mysql = require("mysql");
 var inquirer = require("inquirer");
 
-var clear = require("clear")
+
 
 var cTable = require("console.table")
 
@@ -45,19 +45,19 @@ var connection = mysql.createConnection({
     .then(function(answer) {
 
       if (answer.queryType=== "View Products for Sale") {
-        clear()
+       
         viewAll();
       }
       else if(answer.queryType=== "View Low Inventory") {
-        clear()  
+       
         viewLow();
         
       } else if (answer.queryType=== "Add to Inventory"){
-        clear()  
+       
         addInventory();
         
       } else if (answer.queryType=== "Add New Product"){
-        clear()  
+       // clear()  
         AddProduct()
 
       } else {
