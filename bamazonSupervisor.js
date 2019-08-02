@@ -3,6 +3,8 @@ var inquirer = require("inquirer");
 
 var cTable = require("console.table")
 
+
+
 var connection = mysql.createConnection({
     host: "localhost",
   
@@ -20,19 +22,19 @@ var connection = mysql.createConnection({
   connection.connect(function(err) {
     if (err) throw err;
     // run the start function after the connection is made to prompt the user
-  mainMenu()
-  });
+supMenu()
+  }); 
 
 
 
 
-function mainMenu() {
+function supMenu() {
     inquirer
     .prompt({
       name: "queryType",
       type: "list",
       message: "Welcome Bamazon Supervisor! What would you like to do today? ",
-      choices: ["View Sales by Department" , "Add a Department", "Exit"]
+      choices: ["View Sales by Department" , "Add a Department",  "Exit"]
     })
     .then(function(answer) {
       // based on their answer, either call the bid or the post functions
@@ -42,7 +44,7 @@ function mainMenu() {
       else if(answer.queryType=== "Add a Department") {
           addDept();
         
-      }  else {
+      }   else {
           connection.end();
       }
     });
@@ -58,7 +60,7 @@ connection.query("SELECT departments.Department_ID, departments.Department_Name,
     if (err) throw err;
     console.table(res)
 
-    mainMenu()
+    supMenu()
 })
 
 }
@@ -89,7 +91,7 @@ function addDept() {
               if (err) throw err;
               console.log(res.affectedRows + " product inserted!\n");
               // Call updateProduct AFTER the INSERT completes
-              mainMenu()
+              supMenu()
             }
           );
 
@@ -98,4 +100,8 @@ function addDept() {
     })
 
 }
+
+
+
+
 

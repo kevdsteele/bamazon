@@ -12,7 +12,6 @@ var allDepts =[]
 
 
 
-
 var connection = mysql.createConnection({
     host: "localhost",
   
@@ -30,17 +29,20 @@ var connection = mysql.createConnection({
   connection.connect(function(err) {
     if (err) throw err;
 
-    menu();
+   manMenu()
   });
 
-  function menu ( ) {
+  
+
+
+  function manMenu ( ) {
 
     inquirer
     .prompt({
       name: "queryType",
       type: "list",
       message: "Welcome Bamazon Manager! What would you like to do today? ",
-      choices: ["View Products for Sale", "View Low Inventory", "Add to Inventory", "Add New Product", "Exit"]
+      choices: ["View Products for Sale", "View Low Inventory", "Add to Inventory", "Add New Product",  "Exit"]
     })
     .then(function(answer) {
 
@@ -57,10 +59,10 @@ var connection = mysql.createConnection({
         addInventory();
         
       } else if (answer.queryType=== "Add New Product"){
-       // clear()  
+        
         AddProduct()
 
-      } else {
+      }  else {
           connection.end();
       }
     });
@@ -75,7 +77,7 @@ var connection = mysql.createConnection({
 
       console.table(res)
       
-      menu()
+      manMenu()
     });
   }
 
@@ -84,7 +86,7 @@ var connection = mysql.createConnection({
     connection.query("SELECT * FROM products WHERE Stock_Quantity < 5 ORDER BY Product_Name", function(err, res) {
         if (err) throw err;
         console.table(res)
-      menu()
+      manMenu()
     });
   }
 
@@ -156,7 +158,7 @@ function updateInventory(newQuantity, productUpdate) {
          
      
        console.log('Product updated!')
-         menu()
+         manMenu()
         }
       );
 }  
@@ -213,7 +215,7 @@ function updateInventory(newQuantity, productUpdate) {
               if (err) throw err;
               console.log(answer.productname+ " was added");
              
-              menu()
+              manMenu()
             }
           );
 
@@ -228,3 +230,4 @@ function updateInventory(newQuantity, productUpdate) {
 
 
   }
+
