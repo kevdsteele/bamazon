@@ -10,7 +10,7 @@
 
 * **[Node.JS](https://nodejs.org/en/download/)** must be installed to run this application
 
-> * [Chalk](https://www.npmjs.com/package/chalk), [Inquirer](https://www.npmjs.com/package/inquirer) and [MySQL](https://www.npmjs.com/package/mysql) and [Console.Table](https://www.npmjs.com/package/console.table)node packages must also be installed before running this application*
+> * [Chalk](https://www.npmjs.com/package/chalk), [Inquirer](https://www.npmjs.com/package/inquirer) and [MySQL](https://www.npmjs.com/package/mysql) and [Console.Table] (https://www.npmjs.com/package/console.table)node packages must also be installed before running this application*
 
 * The Node **MySQL** package is used to integrate and connect to a MySQL Database called bamazon_DB. 
 * The Node **Inquirer** package is used to get the user input. 
